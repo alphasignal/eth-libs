@@ -50,7 +50,7 @@ contract UUIDProvider {
         return true;
     }
 
-    function getEntropy() constant returns (bytes32 key) {
+    function getEntropy() pure returns (bytes32 key) {
         for (uint i = 0; i < 256; i++) {
             key = block.blockhash(block.number - i);
             if (!used[key]) return key;
@@ -120,7 +120,7 @@ contract UUIDProvider {
         return uuid;
     }
 
-    function setUUID4Bytes(bytes16 v) constant returns (bytes16) {
+    function setUUID4Bytes(bytes16 v) pure returns (bytes16) {
         byte byte_5 = byte(uint(v) * 2 ** (8 * 5));
         byte byte_7 = byte(uint(v) * 2 ** (8 * 7));
 
