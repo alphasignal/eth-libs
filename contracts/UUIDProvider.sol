@@ -94,7 +94,7 @@ contract UUIDProvider {
 
     bytes16[] public collisions;
 
-    function collisionCount() constant returns (uint) {
+    function collisionCount() pure returns (uint) {
         return collisions.length;
     }
 
