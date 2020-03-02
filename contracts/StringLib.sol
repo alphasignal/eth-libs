@@ -1,3 +1,5 @@
+pragma solidity ^0.5.0;
+
 contract StringLib
 {
     function uint2str(uint i) public pure returns (string memory)
