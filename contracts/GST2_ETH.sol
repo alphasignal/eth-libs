@@ -1,7 +1,18 @@
 pragma solidity ^0.5.0;
 
-import "rlp.sol";
 
+contract Rlp {
+
+	function mk_contract_address(uint _nonce) view internal returns(address rlp) {
+		if(_nonce == 0x00)     return address(uint256(keccak256(abi.encodePacked(byte(0xd6), byte(0x94), address(this), byte(0x80)))));
+		if(_nonce <= 0x7f)     return address(uint256(keccak256(abi.encodePacked(byte(0xd6), byte(0x94), address(this), uint8(_nonce)))));
+		if(_nonce <= 0xff)     return address(uint256(keccak256(abi.encodePacked(byte(0xd7), byte(0x94), address(this), byte(0x81), uint8(_nonce)))));
+		if(_nonce <= 0xffff)   return address(uint256(keccak256(abi.encodePacked(byte(0xd8), byte(0x94), address(this), byte(0x82), uint16(_nonce)))));
+		if(_nonce <= 0xffffff) return address(uint256(keccak256(abi.encodePacked(byte(0xd9), byte(0x94), address(this), byte(0x83), uint24(_nonce)))));
+		return address(uint256(keccak256(abi.encodePacked(byte(0xda), byte(0x94), address(this), byte(0x84), uint32(_nonce))))); // more than 2^32 nonces not realistic
+	}
+
+}
 contract GasToken2 is Rlp {
     //////////////////////////////////////////////////////////////////////////
     // Generic ERC20
@@ -25,7 +36,7 @@ contract GasToken2 is Rlp {
         if (value <= s_balances[from]) {
             s_balances[from] -= value;
             s_balances[to] += value;
-            Transfer(from, to, value);
+            emit Transfer(from, to, value);
             return true;
         } else {
             return false;
@@ -58,7 +69,7 @@ contract GasToken2 is Rlp {
             return false;
         }
         s_allowances[owner][spender] = value;
-        Approval(owner, spender, value);
+        emit Approval(owner, spender, value);
         return true;
     }
 
@@ -159,7 +170,7 @@ contract GasToken2 is Rlp {
         uint256 tail = s_tail;
         // tail points to slot behind the last contract in the queue
         for (uint256 i = tail + 1; i <= tail + value; i++) {
-            mk_contract_address(this, i).call();
+            mk_contract_address(i);
         }
 
         s_tail = tail + value;
@@ -211,7 +222,7 @@ contract GasToken2 is Rlp {
             return false;
         }
 
-        mapping(address => uint256) from_allowances = s_allowances[from];
+        mapping(address => uint256) storage from_allowances = s_allowances[from];
         uint256 spender_allowance = from_allowances[spender];
         if (value > spender_allowance) {
             return false;
@@ -236,7 +247,7 @@ contract GasToken2 is Rlp {
             value = from_balance;
         }
 
-        mapping(address => uint256) from_allowances = s_allowances[from];
+        mapping(address => uint256) storage from_allowances = s_allowances[from];
         uint256 spender_allowance = from_allowances[spender];
         if (value > spender_allowance) {
             value = spender_allowance;
