@@ -223,7 +223,7 @@ contract GasToken2 is Rlp {
             return false;
         }
 
-        mapping(address => uint256) from_allowances = s_allowances[from];
+        mapping(address => uint256) storage from_allowances = s_allowances[from];
         uint256 spender_allowance = from_allowances[spender];
         if (value > spender_allowance) {
             return false;
@@ -248,7 +248,7 @@ contract GasToken2 is Rlp {
             value = from_balance;
         }
 
-        mapping(address => uint256) from_allowances = s_allowances[from];
+        mapping(address => uint256) storage from_allowances = s_allowances[from];
         uint256 spender_allowance = from_allowances[spender];
         if (value > spender_allowance) {
             value = spender_allowance;
