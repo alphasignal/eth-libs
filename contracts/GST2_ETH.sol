@@ -17,7 +17,7 @@ contract GasToken2 is Rlp {
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
     // Spec: Get the account balance of another account with address `owner`
-    function balanceOf(address owner) public constant returns (uint256 balance) {
+    function balanceOf(address owner) public view returns (uint256 balance) {
         return s_balances[owner];
     }
 
@@ -67,7 +67,7 @@ contract GasToken2 is Rlp {
     // What if the allowance is higher than the balance of the `owner`?
     // Callers should be careful to use min(allowance, balanceOf) to make sure
     // that the allowance is actually present in the account!
-    function allowance(address owner, address spender) public constant returns (uint256 remaining) {
+    function allowance(address owner, address spender) public view returns (uint256 remaining) {
         return s_allowances[owner][spender];
     }
 
@@ -95,7 +95,7 @@ contract GasToken2 is Rlp {
     // totalSupply gives  the number of tokens currently in existence
     // Each token corresponds to one child contract that can be SELFDESTRUCTed
     // for a gas refund.
-    function totalSupply() public constant returns (uint256 supply) {
+    function totalSupply() public view returns (uint256 supply) {
         return s_head - s_tail;
     }
 
