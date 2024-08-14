@@ -14,36 +14,9 @@ contract StringLib
         bytes memory bstr = new bytes(length);
         uint k = length - 1;
         while (i != 0){
-            bstr[k--] = byte(uint8(48 + i % 10));
+            bstr[k--] = bytes1(uint8(48 + i % 10));
             i /= 10;
         }
-        return string(bstr);
-    }
-    function int2str(int i) public pure returns (string memory)
-    {
-        if (i == 0) return "0";
-        int j = i;
-        uint length;
-        bool isNegative = false;
-        if(i < 0){
-            i = -i;
-            isNegative = true;
-            length++;
-        }
-        while (j != 0){
-            length++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(length);
-        uint k = length - 1;
-        while (i != 0)
-        {
-            k--;
-            bstr[k] = byte(uint8(48 + i % 10));
-            i /= 10;
-        }
-        if(isNegative)
-            bstr[0] = '-';
         return string(bstr);
     }
 
